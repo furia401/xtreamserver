@@ -1,0 +1,42 @@
+Options -Indexes
+RewriteEngine On
+DirectoryIndex index.php
+
+ErrorDocument 404 /pages/404/index.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Redirecionar para index.php se não houver arquivo index dentro da pasta
+#RewriteCond %{REQUEST_FILENAME} -d
+#RewriteCond %{REQUEST_URI} !index\.php$
+#RewriteRule ^(.*[^/])$ /$1/index.php [L]
+
+# Redirecionar Links encurtados
+RewriteRule ^m3u-ts/([^/]+)/([^/]+)$ /get.php?username=$1&password=$2&type=m3u_plus&output=ts [L,QSA]
+RewriteRule ^m3u-m3u8/([^/]+)/([^/]+)$ /get.php?username=$1&password=$2&type=m3u_plus&output=m3u8 [L,QSA]
+RewriteRule ^ss-ts/([^/]+)/([^/]+)$ /ssiptv.php?username=$1&password=$2&ssiptv&output=ts [L,QSA]
+RewriteRule ^ss-m3u8/([^/]+)/([^/]+)$ /ssiptv.php?username=$1&password=$2&ssiptv&output=m3u8 [L,QSA]
+RewriteRule ^epg/([^/]+)/([^/]+)$ /xmltv.php?username=$1&password=$2 [L,QSA]
+
+# Separar a URL em partes e armazená-las em variáveis
+RewriteCond %{REQUEST_URI} !/hls/ [NC]
+RewriteCond %{REQUEST_URI} !^/live/ [NC]
+RewriteRule ^([^/]+)/([^/]+)/([0-9]+\.ts)$ /live/$1/$2/$3 [L,R=301]
+RewriteRule ^([^/]+)/([^/]+)/([0-9]+\.m3u8)$ /live/$1/$2/$3 [L,R=301]
+RewriteRule ^(hls)/([^/]+)/([^/]+)/(.*)$ retransmitir-live.php?type_url=$1&usuario=$2&senha=$3&arquivo=$4 [L,QSA]
+RewriteRule ^(live)/([^/]+)/([^/]+)/(.*)$ redirecionar-live.php?type_url=$1&usuario=$2&senha=$3&arquivo=$4 [L,QSA]
+RewriteRule ^(movie)/([^/]+)/([^/]+)/(.*)$ redirecionar-vod.php?type_url=$1&usuario=$2&senha=$3&arquivo=$4 [L,QSA]
+RewriteRule ^(series)/([^/]+)/([^/]+)/(.*)$ redirecionar-series.php?type_url=$1&usuario=$2&senha=$3&arquivo=$4 [L,QSA]
+
+# Nova regra para timeshift
+RewriteRule ^(timeshift)/([^/]+)/([^/]+)/(.*)$ redirecionar-live.php?type_url=$1&usuario=$2&senha=$3&tempo=$4 [L,QSA]
+
+# Adicionar regra para redirecionar URLs sem a extensão .ts
+RewriteCond %{REQUEST_URI} !^/live/ [NC]
+RewriteCond %{REQUEST_URI} !\.ts$ [NC]
+RewriteRule ^([^/]+)/([^/]+)/([0-9]+)$ /live/$1/$2/$3.ts [L,R=301]
+
+# Nova regra para redirecionar arquivos .ts para download.php
+RewriteCond %{REQUEST_URI} \.ts$ [NC]
+RewriteRule ^(.+\.ts)$ hls.php?file=$1 [L,QSA]
