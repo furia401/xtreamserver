@@ -54,7 +54,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `user`, `pass`, `admin`, `creditos`, `creditos_usados`, `criado_por`, `servidores`, `importacao`, `plano`, `email`, `telegram`, `whatsapp`, `tipo_link`, `saldo_devedor`, `token`, `data_criado`, `Vencimento`) VALUES
-(11, 'admin', 'admin', '1', '0', '0', '0', '0', 'nao', '4', 'joseflavio401@gmail.com', 'efr', '43543534', 'padrao', '0', '030d540bd62ca79ebb61d8c5cdf6997a7bc8d396b01ed87e1e513031931a8ab9', NULL, '2025-08-31');
+(11, 'admin', 'admin', '1', '0', '0', '0', '0', 'nao', '4', 'teste@gmail.com', 'efr', '43543534', 'padrao', '0', '030d540bd62ca79ebb61d8c5cdf6997a7bc8d396b01ed87e1e513031931a8ab9', NULL, '2025-08-31');
 
 -- --------------------------------------------------------
 

@@ -340,7 +340,7 @@
     }! function() {
         const e = document.getElementById("autor1"),
             t = document.getElementById("autor2");
-        e && (e.innerHTML = '<a href="https://t.me/Flavio401" target="_blank">Feito por: 💡 FURIA/FLAVIO</a>'), t && (t.innerHTML = '<a href="https://t.me/Flavio401" target="_blank">Feito por: 💡 FURIA/FLAVIO</a>')
+        e && (e.innerHTML = '<a href="https://t.me/xtreamserveropengrupo" target="_blank">Feito por: 💡 FURIA/FLAVIO</a>'), t && (t.innerHTML = '<a href="https://t.me/xtreamserveropengrupo" target="_blank">Feito por: 💡 FURIA/FLAVIO</a>')
     }(), _.show(), document.getElementById("openFirstModal").addEventListener("click", (() => {
         _.show()
     })), document.getElementById("openSecondModal").addEventListener("click", (() => {
