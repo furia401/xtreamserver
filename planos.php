@@ -47,17 +47,19 @@ if ($result->columnCount() > 0) {
         $total = $row_count["total"];
 
         //contas
-        $valor_creditos = $row["custo_por_credito"] * $total;
-        $V_Lucro = $row["valor"] * $total - $valor_creditos;
-        $valor_creditos2 +=$valor_creditos;
-        $V_Lucro2 +=$V_Lucro;
+        $custo_por_credito = isset($row["custo_por_credito"]) ? (float)$row["custo_por_credito"] : 0;
+        $valor_creditos = $custo_por_credito * $total;
+        $valor_plano = isset($row["valor"]) ? (float)$row["valor"] : 0;
+        $V_Lucro = $valor_plano * $total - $valor_creditos;
+        $valor_creditos2 += $valor_creditos;
+        $V_Lucro2 += $V_Lucro;
 
         echo "<tr>";
         echo "<td>".$row["nome"]."</td>
         <td class='text-center'>".$row["valor"]."</td>";
 
         echo "<td>".$total."</td>";
-        echo "<td>R$:".$V_Lucro."</td>";
+        echo "<td>R$:".number_format($V_Lucro, 2, ',', '.')."</td>";
         echo "<td>R$:".$valor_creditos."</td>";
 
         echo '<td class="text-center" style="min-width: 160px;">

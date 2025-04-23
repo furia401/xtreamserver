@@ -54,13 +54,15 @@ function edite_planos($id)
 function confirme_edite_planos($id, $nome, $valor, $custo_por_credito)
 {
 
-    if (empty($valor) && !is_numeric($valor)) {
+    if ($valor === null || $valor === '' || !is_numeric($valor)) {
         $valor = 0; 
         $valor_primeiro_mes = 0;
     }
-    if (empty($custo_por_credito) && !is_numeric($custo_por_credito)) {
+
+    if ($custo_por_credito === null || $custo_por_credito === '' || !is_numeric($custo_por_credito)) {
         $custo_por_credito = 0; 
     }
+
 
     $conexao = conectar_bd();
 
@@ -82,28 +84,28 @@ function confirme_edite_planos($id, $nome, $valor, $custo_por_credito)
             $sql_update = "UPDATE planos SET ";
             $updates = [];
 
-            if (!empty($nome)) {
+            if (!is_null($nome) && $nome !== '') {
                 $updates[] = "nome = :nome";
             }
-            if (!empty($valor) || $valor === 0) {
+            if (is_numeric($valor)) {
                 $updates[] = "valor = :valor";
             }
-            if (!empty($custo_por_credito) || $custo_por_credito === 0) {
+            if (is_numeric($custo_por_credito)) {
                 $updates[] = "custo_por_credito = :custo_por_credito";
             }
-
+            
             $sql_update .= implode(", ", $updates);
             $sql_update .= " WHERE id = :id AND admin_id = :admin_id";
 
             $stmt_update = $conexao->prepare($sql_update);
 
-            if (!empty($nome)) {
+            if (!is_null($nome) && $nome !== '') {
                 $stmt_update->bindParam(':nome', $nome);
             }
-            if (!empty($valor) || $valor === 0) {
+            if (is_numeric($valor)) {
                 $stmt_update->bindParam(':valor', $valor);
             }
-            if (!empty($custo_por_credito) || $custo_por_credito === 0) {
+            if (is_numeric($custo_por_credito)) {
                 $stmt_update->bindParam(':custo_por_credito', $custo_por_credito);
             }
 

@@ -55,56 +55,57 @@ function Dashboard()
     $resultadoFinal['clientesvencidos_proximos_valor_total'] = 0;
     $lucro = 0;
     foreach ($resultados as $dados) {
-        $lucro += $dados['V_total'] - $dados['custo_por_credito'];
-        $resultadoFinal['Totaldeclientes_valor'] += $dados['V_total'] - $dados['custo_por_credito'];
+        $custo_por_credito = isset($dados["custo_por_credito"]) ? (float)$dados["custo_por_credito"] : 0;
+        $lucro += $dados['V_total'] - $custo_por_credito;
+        $resultadoFinal['Totaldeclientes_valor'] += $dados['V_total'] - $custo_por_credito;
         $resultadoFinal['Totaldeclientes_valor_unidade'] = number_format($lucro / $resultadoFinal['Totaldeclientes'], 2);
 
         if ($dados['Vencimento'] >= date('Y-m-d')) {
             $resultadoFinal['clientesAtivos']++;
-            $resultadoFinal['clientesAtivos_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesAtivos_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesAtivos_valor_unidade'] = number_format($resultadoFinal['clientesAtivos_valor'] / $resultadoFinal['clientesAtivos'], 2);
         }
         if (date('Y-m', strtotime($dados['Vencimento'])) < date('Y-m', strtotime(date('Y-m-d')))) {
             $resultadoFinal['clientesvencidostotal']++;
-            $resultadoFinal['clientesvencidostotal_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesvencidostotal_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesvencidostotal_valor_unidade'] = number_format($resultadoFinal['clientesvencidostotal_valor'] / $resultadoFinal['clientesvencidostotal'], 2);
         }
         $proximoMes = date('Y-m', strtotime('+1 month', strtotime(date('Y-m'))));
         if (date('Y-m', strtotime($dados['Vencimento'])) == date('Y-m', strtotime($proximoMes)) && date('Y-m', strtotime($dados['Criado_em'])) < date('Y-m', strtotime(date('Y-m')))) {
             $resultadoFinal['clientesrenovados']++;
-            $resultadoFinal['clientesrenovados_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesrenovados_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesrenovados_valor_total'] += $dados['V_total'];
             $resultadoFinal['clientesrenovados_valor_unidade'] = number_format($resultadoFinal['clientesrenovados_valor'] / $resultadoFinal['clientesrenovados'], 2);
         }
         if (date('Y-m', strtotime($dados['Vencimento'])) == date('Y-m', strtotime($proximoMes)) && date('Y-m', strtotime($dados['Criado_em'])) <= date('Y-m', strtotime(date('Y-m')))) {
-            $resultadoFinal['clientesrenovados_lista_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesrenovados_lista_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesrenovados_lista_valor_total'] += $dados['V_total'];
             $resultadoFinal['clientesrenovados_lista'][] = array(
                 "id" => $dados['id_usuario'],
                 "usuario" => $dados['c_usuario'],
-                "lucro" => ($dados['V_total'] - $dados['custo_por_credito']),
+                "lucro" => ($dados['V_total'] - $custo_por_credito),
                 "total" => $dados['V_total'],
                 "data" => date('d-m-Y', strtotime($dados['Vencimento'])),
             );
         }
         if (date('Y-m-d', strtotime($dados['Vencimento'])) >= date('Y-m-d', strtotime(date('Y-m-d'))) && date('Y-m', strtotime($dados['Vencimento'])) < date('Y-m', strtotime($proximoMes))) {
             $resultadoFinal['clientesarenovar']++;
-            $resultadoFinal['clientesarenovar_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesarenovar_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesarenovar_valor_unidade'] = number_format($resultadoFinal['clientesarenovar_valor'] / $resultadoFinal['clientesarenovar'], 2);
         }
         if (date('Y-m', strtotime($dados['Criado_em'])) == date('Y-m', strtotime(date('Y-m-d')))) {
             $resultadoFinal['clientesnovos']++;
-            $resultadoFinal['clientesnovos_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesnovos_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesnovos_valor_unidade'] = number_format($resultadoFinal['clientesnovos_valor'] / $resultadoFinal['clientesnovos'], 2);
         }
         if (date('Y-m-d', strtotime($dados['Vencimento'])) < date('Y-m-d', strtotime(date('Y-m-d'))) && date('Y-m', strtotime($dados['Vencimento'])) == date('Y-m', strtotime(date('Y-m-d')))) {
             $resultadoFinal['clientesvencidos_este_mes']++;
-            $resultadoFinal['clientesvencidos_este_mes_valor'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesvencidos_este_mes_valor'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesvencidos_este_mes_valor_unidade'] = number_format($resultadoFinal['clientesvencidos_este_mes_valor'] / $resultadoFinal['clientesvencidos_este_mes'], 2);
             $resultadoFinal['clientesvencidos_este_mes_lista'][] = array(
                 "id" => $dados['id_usuario'],
                 "usuario" => $dados['c_usuario'],
-                "lucro" => ($dados['V_total'] - $dados['custo_por_credito']),
+                "lucro" => ($dados['V_total'] - $custo_por_credito),
                 "total" => $dados['V_total'],
                 "data" => date('d-m-Y', strtotime($dados['Vencimento'])),
             );
@@ -113,11 +114,11 @@ function Dashboard()
             $resultadoFinal['clientesvencidos_hoje_lista'][] = array(
                 "id" => $dados['id_usuario'],
                 "usuario" => $dados['c_usuario'],
-                "lucro" => ($dados['V_total'] - $dados['custo_por_credito']),
+                "lucro" => ($dados['V_total'] - $custo_por_credito),
                 "total" => $dados['V_total'],
                 "data" => date('d-m-Y', strtotime($dados['Vencimento'])),
             );
-            $resultadoFinal['clientesvencidos_hoje_lucro'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesvencidos_hoje_lucro'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesvencidos_valor_total'] += $dados['V_total'];
         }
 
@@ -126,11 +127,11 @@ function Dashboard()
             $resultadoFinal['clientesvencidos_amanha_lista'][] = array(
                 "id" => $dados['id_usuario'],
                 "usuario" => $dados['c_usuario'],
-                "lucro" => ($dados['V_total'] - $dados['custo_por_credito']),
+                "lucro" => ($dados['V_total'] - $custo_por_credito),
                 "total" => $dados['V_total'],
                 "data" => date('d-m-Y', strtotime($dados['Vencimento'])),
             );
-            $resultadoFinal['clientesvencidos_amanha_lucro'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesvencidos_amanha_lucro'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesvencidos_amanha_valor_total'] += $dados['V_total'];
         }
 
@@ -140,11 +141,11 @@ function Dashboard()
             $resultadoFinal['clientesvencidos_proximos'][] = array(
                 "id" => $dados['id_usuario'],
                 "usuario" => $dados['c_usuario'],
-                "lucro" => ($dados['V_total'] - $dados['custo_por_credito']),
+                "lucro" => ($dados['V_total'] - $custo_por_credito),
                 "total" => $dados['V_total'],
                 "data" => date('d-m-Y', strtotime($dados['Vencimento'])),
             );
-            $resultadoFinal['clientesvencidos_proximos_lucro'] += ($dados['V_total'] - $dados['custo_por_credito']);
+            $resultadoFinal['clientesvencidos_proximos_lucro'] += ($dados['V_total'] - $custo_por_credito);
             $resultadoFinal['clientesvencidos_proximos_valor_total'] += $dados['V_total'];
         }
 
@@ -203,7 +204,8 @@ function testes()
     $resultadoFinal['Testesvencidostotal_valor_unidade'] = 0;
     $lucro = 0;
     foreach ($resultados as $dados) {
-        $lucro += $dados['V_total'] - $dados['custo_por_credito'];
+        $custo_por_credito = isset($dados["custo_por_credito"]) ? (float)$dados["custo_por_credito"] : 0;
+        $lucro += $dados['V_total'] - $custo_por_credito;
         $resultadoFinal['Totaldetestes_valor'] += $dados['V_total'] - $dados['custo_por_credito'];
         $resultadoFinal['Totaldetestes_valor_unidade'] = number_format($lucro / $resultadoFinal['Totaldetestes'], 2);
 

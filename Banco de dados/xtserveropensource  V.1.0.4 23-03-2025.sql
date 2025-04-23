@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Tempo de geração: 17/04/2025 às 21:18
--- Versão do servidor: 8.0.41-0ubuntu0.20.04.1
--- Versão do PHP: 7.4.33
+-- Host: 127.0.0.1:3306
+-- Tempo de geração: 23/04/2025 às 19:44
+-- Versão do servidor: 8.3.0
+-- Versão do PHP: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `xtopen.com`
+-- Banco de dados: `xtserveropensource`
 --
 
 -- --------------------------------------------------------
@@ -28,8 +27,9 @@ SET time_zone = "+00:00";
 -- Estrutura para tabela `admin`
 --
 
-CREATE TABLE `admin` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `pass` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `admin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -42,19 +42,21 @@ CREATE TABLE `admin` (
   `email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `telegram` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `whatsapp` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tipo_link` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'padrao',
+  `tipo_link` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `saldo_devedor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `data_criado` date DEFAULT NULL,
-  `Vencimento` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Vencimento` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user` (`user`)
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `admin`
 --
 
 INSERT INTO `admin` (`id`, `user`, `pass`, `admin`, `creditos`, `creditos_usados`, `criado_por`, `servidores`, `importacao`, `plano`, `email`, `telegram`, `whatsapp`, `tipo_link`, `saldo_devedor`, `token`, `data_criado`, `Vencimento`) VALUES
-(11, 'admin', 'admin', '1', '0', '0', '0', '0', 'nao', '4', 'teste@gmail.com', 'efr', '43543534', 'padrao', '0', '030d540bd62ca79ebb61d8c5cdf6997a7bc8d396b01ed87e1e513031931a8ab9', NULL, '2025-08-31');
+(11, 'admin', 'admin', '1', '0', '0', '0', '0', 'nao', '4', 'teste@gmail.com', 'efr', '43543534', 'padrao', '315', '93cec20a5a2d9ccb6e57c79c76b823c6181c04476b73413ec974d0be7808886f', NULL, '2025-08-31');
 
 -- --------------------------------------------------------
 
@@ -62,14 +64,16 @@ INSERT INTO `admin` (`id`, `user`, `pass`, `admin`, `creditos`, `creditos_usados
 -- Estrutura para tabela `categoria`
 --
 
-CREATE TABLE `categoria` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `categoria`;
+CREATE TABLE IF NOT EXISTS `categoria` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `parent_id` int DEFAULT '0',
   `type` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `is_adult` int DEFAULT '0',
   `bg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `admin_id` int NOT NULL
+  `admin_id` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -78,9 +82,9 @@ CREATE TABLE `categoria` (
 -- Estrutura para tabela `clientes`
 --
 
-CREATE TABLE `clientes` (
-  `id` int NOT NULL,
-  `info_conexoes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+DROP TABLE IF EXISTS `clientes`;
+CREATE TABLE IF NOT EXISTS `clientes` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `usuario` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `senha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -110,8 +114,17 @@ CREATE TABLE `clientes` (
   `device_key` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email_app` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `senha_app` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `validade_app` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `validade_app` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `usuario` (`usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `clientes`
+--
+
+INSERT INTO `clientes` (`id`, `name`, `usuario`, `senha`, `Criado_em`, `Ultimo_pagamento`, `Vencimento`, `is_trial`, `adulto`, `conexoes`, `bloqueio_conexao`, `admin_id`, `ip`, `ultimo_acesso`, `user_agent`, `ultimo_ip`, `Dispositivo`, `App`, `Forma_de_pagamento`, `nome_do_pagador`, `Whatsapp`, `plano`, `V_total`, `c_ocultar_fonte`, `msg`, `indicado_por`, `device_mac`, `device_key`, `email_app`, `senha_app`, `validade_app`) VALUES
+(6, '', '746932', '520694', '2025-04-23 16:11:36', '2025-04-23 16:11:36', '2025-05-24 02:59:59', 0, 0, 1, 'sim', '74', NULL, NULL, NULL, NULL, '', '', 'PIX', '', NULL, '55', '30', 'nao', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -119,11 +132,13 @@ CREATE TABLE `clientes` (
 -- Estrutura para tabela `devices_apps`
 --
 
-CREATE TABLE `devices_apps` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `devices_apps`;
+CREATE TABLE IF NOT EXISTS `devices_apps` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `device_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `app_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `app_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `devices_apps`
@@ -168,8 +183,13 @@ INSERT INTO `devices_apps` (`id`, `device_name`, `app_name`) VALUES
 (36, 'TV SANSUNG', 'SmartUP'),
 (37, 'PC/COMPUTADOR', 'SMARTERS PLAYER PRO'),
 (40, 'Roku TV', 'SIMPLE TV'),
+(41, 'TV ANDROID', 'Sky Glass+'),
+(42, 'TV ANDROID', 'FURIA PLAY SM V3'),
+(43, 'TV ANDROID', 'FURIA PLAY SM V4'),
 (44, 'Roku TV', 'Quick Player'),
 (45, 'Roku TV', 'Meta Player'),
+(46, 'TV BOX', 'FURIA PLAY SM V3'),
+(47, 'TV BOX', 'FURIA PLAY SM V4'),
 (49, 'Roku TV', 'IBO PLAYER PRO'),
 (50, 'Roku TV', 'IBO PRO'),
 (51, 'TV SANSUNG', 'IBO PLAYER PRO'),
@@ -185,21 +205,23 @@ INSERT INTO `devices_apps` (`id`, `device_name`, `app_name`) VALUES
 -- Estrutura para tabela `planos`
 --
 
-CREATE TABLE `planos` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `planos`;
+CREATE TABLE IF NOT EXISTS `planos` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `valor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '20',
-  `valor_primeiro_mes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `custo_por_credito` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `admin_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `admin_id` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `planos`
 --
 
-INSERT INTO `planos` (`id`, `nome`, `valor`, `valor_primeiro_mes`, `custo_por_credito`, `admin_id`) VALUES
-(1, 'Completo', '35', '20', '0', 11);
+INSERT INTO `planos` (`id`, `nome`, `valor`, `custo_por_credito`, `admin_id`) VALUES
+(55, 'Completo', '30', '2', 74),
+(56, 'teste', '30', '0', 11);
 
 -- --------------------------------------------------------
 
@@ -207,10 +229,12 @@ INSERT INTO `planos` (`id`, `nome`, `valor`, `valor_primeiro_mes`, `custo_por_cr
 -- Estrutura para tabela `planos_admin`
 --
 
-CREATE TABLE `planos_admin` (
-  `id` int NOT NULL,
-  `nome` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `planos_admin`;
+CREATE TABLE IF NOT EXISTS `planos_admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `planos_admin`
@@ -228,8 +252,9 @@ INSERT INTO `planos_admin` (`id`, `nome`) VALUES
 -- Estrutura para tabela `series`
 --
 
-CREATE TABLE `series` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `series`;
+CREATE TABLE IF NOT EXISTS `series` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `is_adult` int DEFAULT '0',
   `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `category_id` int DEFAULT NULL,
@@ -248,7 +273,9 @@ CREATE TABLE `series` (
   `backdrop_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `youtube_trailer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `episode_run_time` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tmdb_id` int DEFAULT NULL
+  `tmdb_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `series_id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -257,11 +284,12 @@ CREATE TABLE `series` (
 -- Estrutura para tabela `series_episodes`
 --
 
-CREATE TABLE `series_episodes` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `series_episodes`;
+CREATE TABLE IF NOT EXISTS `series_episodes` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `situacao` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tipo_link` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'padrao',
-  `link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `tipo_link` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'padrao',
+  `link` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `series_id` int DEFAULT NULL,
   `category_id` int DEFAULT NULL,
   `episode_num` int DEFAULT NULL,
@@ -277,7 +305,9 @@ CREATE TABLE `series_episodes` (
   `custom_sid` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `added` int DEFAULT NULL,
   `season` int DEFAULT NULL,
-  `tmdb_id` int DEFAULT NULL
+  `tmdb_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_series_episodes_series` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -286,8 +316,9 @@ CREATE TABLE `series_episodes` (
 -- Estrutura para tabela `series_seasons`
 --
 
-CREATE TABLE `series_seasons` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `series_seasons`;
+CREATE TABLE IF NOT EXISTS `series_seasons` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `series_id` int DEFAULT NULL,
   `category_id` int DEFAULT NULL,
   `air_date` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
@@ -297,7 +328,8 @@ CREATE TABLE `series_seasons` (
   `season_number` int DEFAULT NULL,
   `cover` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `cover_big` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tmdb_id` int DEFAULT NULL
+  PRIMARY KEY (`id`),
+  KEY `fk_series_seasons_series` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -306,25 +338,26 @@ CREATE TABLE `series_seasons` (
 -- Estrutura para tabela `streams`
 --
 
-CREATE TABLE `streams` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `streams`;
+CREATE TABLE IF NOT EXISTS `streams` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `situacao` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tipo_link` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'padrao',
-  `link` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `tipo_link` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'padrao',
+  `link` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `year` int DEFAULT NULL,
   `stream_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'movie',
+  `epg_channel_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `stream_icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `rating` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `rating_5based` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `added` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `category_id` int DEFAULT NULL,
-  `epg_channel_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `container_extension` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'ts',
   `custom_sid` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `direct_source` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `kinopoisk_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `tmdb_id` int DEFAULT NULL,
+  `tmdb_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `cover_big` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `release_date` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `episode_run_time` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
@@ -341,10 +374,12 @@ CREATE TABLE `streams` (
   `backdrop_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `duration_secs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `duration` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `bitrate` int DEFAULT NULL,
+  `bitrate` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `releasedate` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `subtitles` int DEFAULT NULL,
-  `is_adult` int DEFAULT '0'
+  `is_adult` int DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `stream_id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -353,162 +388,18 @@ CREATE TABLE `streams` (
 -- Estrutura para tabela `ultimos_acessos`
 --
 
-CREATE TABLE `ultimos_acessos` (
-  `id` int NOT NULL,
+DROP TABLE IF EXISTS `ultimos_acessos`;
+CREATE TABLE IF NOT EXISTS `ultimos_acessos` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `id_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `usuario` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `nome` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `data` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `data` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Índices de tabelas apagadas
---
-
---
--- Índices de tabela `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user` (`user`);
-
---
--- Índices de tabela `categoria`
---
-ALTER TABLE `categoria`
-  ADD PRIMARY KEY (`id`);
-
---
--- Índices de tabela `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `usuario` (`usuario`);
-
---
--- Índices de tabela `devices_apps`
---
-ALTER TABLE `devices_apps`
-  ADD PRIMARY KEY (`id`);
-
---
--- Índices de tabela `planos`
---
-ALTER TABLE `planos`
-  ADD PRIMARY KEY (`id`);
-
---
--- Índices de tabela `planos_admin`
---
-ALTER TABLE `planos_admin`
-  ADD PRIMARY KEY (`id`);
-
---
--- Índices de tabela `series`
---
-ALTER TABLE `series`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `series_id` (`id`);
-
---
--- Índices de tabela `series_episodes`
---
-ALTER TABLE `series_episodes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_series_episodes_series` (`series_id`);
-
---
--- Índices de tabela `series_seasons`
---
-ALTER TABLE `series_seasons`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_series_seasons_series` (`series_id`);
-
---
--- Índices de tabela `streams`
---
-ALTER TABLE `streams`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `stream_id` (`id`);
-
---
--- Índices de tabela `ultimos_acessos`
---
-ALTER TABLE `ultimos_acessos`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT de tabelas apagadas
---
-
---
--- AUTO_INCREMENT de tabela `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
-
---
--- AUTO_INCREMENT de tabela `categoria`
---
-ALTER TABLE `categoria`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT de tabela `devices_apps`
---
-ALTER TABLE `devices_apps`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
-
---
--- AUTO_INCREMENT de tabela `planos`
---
-ALTER TABLE `planos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT de tabela `planos_admin`
---
-ALTER TABLE `planos_admin`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de tabela `series`
---
-ALTER TABLE `series`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `series_episodes`
---
-ALTER TABLE `series_episodes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `series_seasons`
---
-ALTER TABLE `series_seasons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `streams`
---
-ALTER TABLE `streams`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `ultimos_acessos`
---
-ALTER TABLE `ultimos_acessos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
